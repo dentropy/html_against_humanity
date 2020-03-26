@@ -13,6 +13,9 @@
   * [✓] Document site map of which route does what
   * [✓] Write code so users can choose a display name
   * [ ] Write code so user can create room and invite other players
+    * [✓] Generate and display join link
+    * [✓] Allow others to join a room
+    * [ ] Let admin remove players that have joined their room
   * [ ] Write html/css for game user experience
 
 ## Game logic Pseudocode
