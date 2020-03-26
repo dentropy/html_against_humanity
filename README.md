@@ -10,7 +10,10 @@
   * [✓] List number of html templates are required
   * [✓] Generate html templates
   * [✓] Map out database game logic and update schema
-  * [ ] Document site map of which route does what
+  * [✓] Document site map of which route does what
+  * [ ] Write code so users can choose a display name
+  * [ ] Write code so user can create room and invite other players
+  * [ ] Write html/css for game user experience
 
 ## Game logic Pseudocode
 
@@ -90,3 +93,14 @@ John's turn is next and a white card is selected for his turn and displayed to t
     * Who submitted black cards - turn_black_cards
     * Who chooses cards and when = turn_phase
   * Turn order - turn_order
+
+## Site map
+
+* ```/```
+  * Home page
+* ```/choose_name```
+  * Change / Select display name
+* ```/play```
+  * Create and manage a room
+* ```/game_id/<game_id>```
+  * Generate HTML depending on what phase and whose turn it is
