@@ -1,6 +1,7 @@
 from flask import Flask, request, url_for, render_template, make_response, session, redirect
 from database import session, UserSessions, Games
 from cookie_generator import generate_random_cookie
+import json
 
 app = Flask(__name__)
 #app.config['SECRET_KEY'] =  'e5ac358c-f0bf-11e5-9e39-d3b532c10a28'
@@ -47,7 +48,7 @@ def update_display_name():
     return render_template("choose_name.html" , display_name=user.player_name)
 
 @app.route('/play')
-def play():
+def setup_game():
     cookie = request.cookies.get("game_session")
     user_object = session.query(UserSessions).filter_by(user_cookie=cookie).first()
     if session.query(Games).filter_by(admin=cookie).count() == 0 :
@@ -56,8 +57,28 @@ def play():
         session.add( Games( admin = user_object.id, game_id = unique_room_id ) )
         session.commit()
     game_object = session.query(Games).filter_by(admin=user_object.id).first()
-    print(game_object)
-    return render_template("game_creator.html", game_id = game_object.game_id)
+    player_names = []
+    for i in json.loads(game_object.players):
+        player_names.append(session.query(UserSessions).filter_by(id =i).first().player_name)
+    return render_template("game_creator.html", game_id = game_object.game_id, players = player_names)
+
+@app.route('/game_id/<game_id>')
+def play(game_id):
+    cookie = request.cookies.get("game_session")
+    user_object = session.query(UserSessions).filter_by(user_cookie=cookie).first()
+    game_object = session.query(Games).filter_by(game_id=game_id).first()
+    if game_object.players == None or game_object.players == "null":
+        game_object.players = json.dumps([user_object.id])
+    elif str(user_object.id) not in json.dumps(game_object.players):
+        old_entry = json.loads(game_object.players)
+        old_entry.append(user_object.id)
+        game_object.players = json.dumps(old_entry)
+    session.commit()
+    game_object = session.query(Games).filter_by(game_id=game_id).first()
+    player_names = []
+    for i in json.loads(game_object.players):
+        player_names.append(session.query(UserSessions).filter_by(id =i).first().player_name)
+    return render_template("game_creator.html", game_id = game_object.game_id, players = player_names)
 
 if __name__ == '__main__':
     app.run()

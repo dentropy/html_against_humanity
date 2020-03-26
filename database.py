@@ -9,10 +9,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 print("Create sqlite database")
-engine = create_engine("sqlite:///cards_against_humanity.sqlite")
+engine = create_engine(
+    "sqlite:///cards_against_humanity.sqlite",
+    connect_args={'check_same_thread': False}
+    )
+## Also same thread is from https://stackoverflow.com/questions/48218065/programmingerror-sqlite-objects-created-in-a-thread-can-only-be-used-in-that-sa
 
 Base = declarative_base()
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine, autoflush=False)
+## auto flush was added because of https://stackoverflow.com/questions/32922210/why-does-a-query-invoke-a-auto-flush-in-sqlalchemy
+
 session = Session()
 
 class UserSessions(Base):
