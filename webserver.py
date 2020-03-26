@@ -3,7 +3,7 @@ from database import session, UserSessions
 from cookie_generator import generate_random_cookie
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] =  'e5ac358c-f0bf-11e5-9e39-d3b532c10a28'
+#app.config['SECRET_KEY'] =  'e5ac358c-f0bf-11e5-9e39-d3b532c10a28'
 
 @app.route('/')
 def index():
@@ -24,6 +24,27 @@ def create_cookie():
         return res
     else:
         return make_response(redirect('/'))
+
+@app.route("/choose_name", methods=['GET'])
+def display_name():
+    cookie = request.cookies.get("game_session")
+    try:
+        display_name = session.query(UserSessions).filter_by(user_cookie=cookie).first().player_name
+        print(display_name)
+    except:
+        display_name = ""
+        print("\n\nERROR Cookie likely missing from database\n\n")
+    return render_template("choose_name.html" , display_name=display_name)
+
+@app.route("/choose_name", methods=['POST'])
+def update_display_name():
+    cookie = request.cookies.get("game_session")
+    data = request.form
+    user = session.query(UserSessions).filter_by(user_cookie=cookie).first()
+    user.player_name = data["display_name"]
+    session.commit()
+    user = session.query(UserSessions).filter_by(user_cookie=cookie).first()
+    return render_template("choose_name.html" , display_name=user.player_name)
 
 if __name__ == '__main__':
     app.run()
