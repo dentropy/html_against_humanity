@@ -16,7 +16,11 @@
 <body>
     <h1>Welcome to Paul Mullins's implementation of Cards Against Humanity</h1>
     <p>Please choose your player name that other people can see when you play with them here</p>
-    <a href="/cookie">Test setting a cookie</a>
+    <p>Your current display name is {{display_name}}</p>
+    <form id="set_display_name_form" action="/choose_name" method="post">
+        Display: <input type="text" name="display_name"><br><br>
+        <input type="submit" value="Update display name">
+    </form>
 </body>
 
 </html>

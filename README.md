@@ -11,7 +11,7 @@
   * [✓] Generate html templates
   * [✓] Map out database game logic and update schema
   * [✓] Document site map of which route does what
-  * [ ] Write code so users can choose a display name
+  * [✓] Write code so users can choose a display name
   * [ ] Write code so user can create room and invite other players
   * [ ] Write html/css for game user experience
 
