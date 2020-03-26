@@ -19,6 +19,7 @@ class UserSessions(Base):
     __tablename__ = "UserSessions"
     id = Column(Integer, primary_key=True)
     user_cookie = Column(String(32), unique=True)
+    player_name = Column(String(100))
 
 class WhiteCards(Base):
     __tablename__ = "WhiteCards"
@@ -33,7 +34,19 @@ class BlackCards(Base):
 class Games(Base):
     __tablename__ = "Games"
     id = Column(Integer, primary_key=True)
-    cost = Column(Integer)
+    game_id = Column(String(32))
+    game_started = Column(Boolean)
+    players = Column(String(1024))
+    turn_number = Column(Integer)
+    players_hand = Column(String(1024))
+    players_white_card = Column(String(1024))
+    players_score = Column(String(1024))
+    white_cards_played = Column(String(1024))
+    black_cards_played = Column(String(1024))
+    turn_selected_player = Column(String(1024))
+    turn_phase = Column(String(1024))
+    turn_black_cards = Column(String(1024))
+    turn_order = Column(String(1024))
 
 class GameMetadata(Base):
     __tablename__ = "GameMetadata"

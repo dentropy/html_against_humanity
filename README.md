@@ -9,7 +9,7 @@
   * [✓] Write user stories
   * [✓] List number of html templates are required
   * [✓] Generate html templates
-  * [ ] Map out database game logic and update schema
+  * [✓] Map out database game logic and update schema
   * [ ] Document site map of which route does what
 
 ## Game logic Pseudocode
@@ -24,23 +24,6 @@
   * Selected player's selected black card is displayed / read aloud to other players
   * Player that submitted selected black card to selected player score increased by one
   * Game finishes when a specified score is selected
-
-## Data that needs to be stored in database
-
-* Player data
-  * Player's Name
-  * Players Hand
-  * Players score
-  * White cards player has acquired
-* Game data
-  * White cards played in game so far
-  * Black cards given out to players so far
-  * Game phase
-    * Selected payer
-    * White Card currently in play
-    * Who submitted black cards
-    * Black cards submitted
-    * Who submitted which black card
 
 ## User Story
 
@@ -64,11 +47,6 @@ Sarah choose Abby's card therefore abby now holds that white card and score is i
 
 John's turn is next and a white card is selected for his turn and displayed to the room
 
-## Design decisions
-
-* How are games stored, a row or a table?
-* How to track users?
-
 ## HTML Templates Required
 
 * Homepage - homepage.html
@@ -85,3 +63,30 @@ John's turn is next and a white card is selected for his turn and displayed to t
     * wait_for_round_winner.html
 * Turn winner page - turn_winner.html
 * Game winner page - game_winner.html
+* Choose name - choose_name.html
+
+## Schema and game logic
+
+* Games have to be stored in a row
+* Store entire game state on a row or manage evolving game state?
+  * Entire game state will be in memory somewhere so it is easier to have entire game state in a row for now
+* How to track users?
+  * Each cookie is a user for now, login will come later
+
+## Data that needs to be stored in database
+
+* Still looking for new players - game_started
+* Player data
+  * Player's Name - UserSessions.player_name
+  * Players Hand - players_hand
+  * Players score - players_score
+  * White cards player has acquired - players_white_card
+* Game data
+  * White cards played in game so far - white_cards_played
+  * Black cards given out to players so far - black_cards_played
+  * Game phase
+    * Selected payer - turn_selected_player
+    * White Card currently in play - turn_white_card
+    * Who submitted black cards - turn_black_cards
+    * Who chooses cards and when = turn_phase
+  * Turn order - turn_order
