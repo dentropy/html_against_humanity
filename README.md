@@ -7,6 +7,10 @@
   * [✓] Import Cards Against Humanity Questions JSON from github into database
   * [✓] Pseudocode Game Logic
   * [✓] Write user stories
+  * [ ] List number of html templates are required
+  * [ ] Generate html templates
+  * [ ] Map out database game logic and update schema
+  * [ ] Document site map of which route does what
 
 ## Game logic Pseudocode
 
