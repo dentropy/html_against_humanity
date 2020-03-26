@@ -16,6 +16,10 @@
     * [✓] Generate and display join link
     * [✓] Allow others to join a room
     * [✓] Let admin remove players that have joined their room
+  * [ ] Write Game logic
+    * [ ] Distribute Black cards
+    * [ ] Choose turn order
+    * [ ] Choose first player and draw white card
   * [ ] Write html/css for game user experience
 
 ## Game logic Pseudocode
@@ -107,3 +111,16 @@ John's turn is next and a white card is selected for his turn and displayed to t
   * Create and manage a room
 * ```/game_id/<game_id>```
   * Generate HTML depending on what phase and whose turn it is
+
+## Brainstorming
+
+* Is is possible to play the game from a single HTML page?
+  * It is possible but is it optimal for design
+  * The game basically has four states therefore if statements can manage a lot of the logic
+  * All game state data flows to page making things easier
+  * What pages would this single page replace?
+    * read_white_card.html
+    * choose_other_player_black_card.html
+    * choose_black_card.html
+    * wait_for_round_winner.html
+    * turn_winner.html
