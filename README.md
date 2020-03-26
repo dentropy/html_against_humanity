@@ -7,7 +7,7 @@
   * [✓] Import Cards Against Humanity Questions JSON from github into database
   * [✓] Pseudocode Game Logic
   * [✓] Write user stories
-  * [ ] List number of html templates are required
+  * [✓] List number of html templates are required
   * [ ] Generate html templates
   * [ ] Map out database game logic and update schema
   * [ ] Document site map of which route does what
@@ -68,3 +68,16 @@ John's turn is next and a white card is selected for his turn and displayed to t
 
 * How are games stored, a row or a table?
 * How to track users?
+
+## HTML Templates Required
+
+* Homepage
+* Game Creator / Manager
+* Users Turn Pages
+  * Waiting for other players to choose black cards
+  * Display and choose black card
+* Not Users Turn Pages
+  * Select a black card
+  * Wait for user to choose black card
+* Turn winner page
+* Game winner page
