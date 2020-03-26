@@ -34,7 +34,8 @@ class BlackCards(Base):
 class Games(Base):
     __tablename__ = "Games"
     id = Column(Integer, primary_key=True)
-    game_id = Column(String(32))
+    admin = Column(Integer)
+    game_id = Column(String(7))
     game_started = Column(Boolean)
     players = Column(String(1024))
     turn_number = Column(Integer)
