@@ -5,8 +5,8 @@
   * [✓] Implement session cookies
   * [✓] Store session cookies in database
   * [✓] Import Cards Against Humanity Questions JSON from github into database
-  * [ ] Pseudocode Game Logic
-  * [ ] Write user stories
+  * [✓] Pseudocode Game Logic
+  * [✓] Write user stories
 
 ## Game logic Pseudocode
 
@@ -37,3 +37,30 @@
     * Who submitted black cards
     * Black cards submitted
     * Who submitted which black card
+
+## User Story
+
+Abby, John, and Sarah are want to play cards against humanity online.
+Abby goes to a website and creates a room to play with her friends.
+After generating a room abby can either share a room id or URL with her friends in order to play
+Once abby can see all her friends in the room she can start the game
+
+Sarah goes first and the web page displays the white card and is told to wait because she goes first
+Abby and John see the white card and their hand and are told to choose one of their black cards
+
+John sends cards in first and everyone's user interface updates to display this fact
+
+Abby submits her card and the game moves to next phase
+
+Sarah is displayed the two black cards that were submitted
+
+Sarah chooses a black card she thinks fits best given the white card she played earlier
+
+Sarah choose Abby's card therefore abby now holds that white card and score is increased by one
+
+John's turn is next and a white card is selected for his turn and displayed to the room
+
+## Design decisions
+
+* How are games stored, a row or a table?
+* How to track users?
