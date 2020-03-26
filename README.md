@@ -8,7 +8,7 @@
   * [✓] Pseudocode Game Logic
   * [✓] Write user stories
   * [✓] List number of html templates are required
-  * [ ] Generate html templates
+  * [✓] Generate html templates
   * [ ] Map out database game logic and update schema
   * [ ] Document site map of which route does what
 
@@ -71,13 +71,17 @@ John's turn is next and a white card is selected for his turn and displayed to t
 
 ## HTML Templates Required
 
-* Homepage
-* Game Creator / Manager
+* Homepage - homepage.html
+* Game Creator / Manager - game_creator.html
 * Users Turn Pages
-  * Waiting for other players to choose black cards
+  * Read white card and wait for other players to choose black cards
+    * read_white_card.html
   * Display and choose black card
+    * choose_other_player_black_card.html
 * Not Users Turn Pages
   * Select a black card
+    * choose_black_card.html
   * Wait for user to choose black card
-* Turn winner page
-* Game winner page
+    * wait_for_round_winner.html
+* Turn winner page - turn_winner.html
+* Game winner page - game_winner.html
