@@ -23,6 +23,8 @@ class UserSessions(Base):
 class Cards(Base):
     __tablename__ = "Cards"
     id = Column(Integer, primary_key=True)
+    white_cards = Column(String(1024))
+    black_cards = Column(String(1024))
 
 class Games(Base):
     __tablename__ = "Games"
