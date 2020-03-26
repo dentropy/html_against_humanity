@@ -15,7 +15,7 @@
   * [ ] Write code so user can create room and invite other players
     * [✓] Generate and display join link
     * [✓] Allow others to join a room
-    * [ ] Let admin remove players that have joined their room
+    * [✓] Let admin remove players that have joined their room
   * [ ] Write html/css for game user experience
 
 ## Game logic Pseudocode

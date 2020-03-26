@@ -47,20 +47,46 @@ def update_display_name():
     user = session.query(UserSessions).filter_by(user_cookie=cookie).first()
     return render_template("choose_name.html" , display_name=user.player_name)
 
-@app.route('/play')
+@app.route('/play', methods=['GET'])
 def setup_game():
     cookie = request.cookies.get("game_session")
     user_object = session.query(UserSessions).filter_by(user_cookie=cookie).first()
     if session.query(Games).filter_by(admin=cookie).count() == 0 :
         print("NO IF")
         unique_room_id = generate_random_cookie(7)
-        session.add( Games( admin = user_object.id, game_id = unique_room_id ) )
+        session.add( Games( admin = user_object.id, game_id = unique_room_id, players="[]") )
         session.commit()
     game_object = session.query(Games).filter_by(admin=user_object.id).first()
     player_names = []
-    for i in json.loads(game_object.players):
+    raw_players = json.loads(game_object.players)
+    for i in raw_players:
         player_names.append(session.query(UserSessions).filter_by(id =i).first().player_name)
-    return render_template("game_creator.html", game_id = game_object.game_id, players = player_names)
+    session.close()
+    return render_template(
+        "game_creator.html", 
+        game_id = game_object.game_id, 
+        players = player_names, 
+        raw_players=raw_players,
+        player_range = range(len(raw_players)),
+        admin = True
+    )
+
+@app.route('/play/', methods=['POST'])
+def set_initial_game_state():
+    cookie = request.cookies.get("game_session")
+    user_object = session.query(UserSessions).filter_by(user_cookie=cookie).first()
+    game_object = session.query(Games).filter_by(admin=user_object.id).first()
+    raw_players = json.loads(game_object.players)
+    if request.form["delete"] == "start":
+        game_object.game_started = True
+        session.commit()
+        return "Game Start"
+    else:
+        raw_players.remove(int(request.form["delete"]))
+        game_object.players = json.dumps(raw_players)
+        session.commit()
+        return make_response(redirect('/play'))
+        
 
 @app.route('/game_id/<game_id>')
 def play(game_id):
@@ -78,7 +104,8 @@ def play(game_id):
     player_names = []
     for i in json.loads(game_object.players):
         player_names.append(session.query(UserSessions).filter_by(id =i).first().player_name)
-    return render_template("game_creator.html", game_id = game_object.game_id, players = player_names)
+    session.close()
+    return render_template("game_creator.html", game_id = game_object.game_id, players = player_names, admin = False)
 
 if __name__ == '__main__':
     app.run()
