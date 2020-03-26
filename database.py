@@ -20,10 +20,14 @@ class UserSessions(Base):
     id = Column(Integer, primary_key=True)
     user_cookie = Column(String(32), unique=True)
 
-class Cards(Base):
-    __tablename__ = "Cards"
+class WhiteCards(Base):
+    __tablename__ = "WhiteCards"
     id = Column(Integer, primary_key=True)
     white_cards = Column(String(1024))
+
+class BlackCards(Base):
+    __tablename__ = "BlackCards"
+    id = Column(Integer, primary_key=True)
     black_cards = Column(String(1024))
 
 class Games(Base):
