@@ -1,7 +1,9 @@
 from flask import Flask, request, url_for, render_template, make_response, session, redirect
-from database import session, UserSessions, Games
+from database import session, UserSessions, Games, WhiteCards, BlackCards
 from cookie_generator import generate_random_cookie
 import json
+import random
+import copy
 
 app = Flask(__name__)
 #app.config['SECRET_KEY'] =  'e5ac358c-f0bf-11e5-9e39-d3b532c10a28'
@@ -54,7 +56,7 @@ def setup_game():
     if session.query(Games).filter_by(admin=cookie).count() == 0 :
         print("NO IF")
         unique_room_id = generate_random_cookie(7)
-        session.add( Games( admin = user_object.id, game_id = unique_room_id, players="[]") )
+        session.add( Games( admin = user_object.id, game_id = unique_room_id, players="[]", game_started=False) )
         session.commit()
     game_object = session.query(Games).filter_by(admin=user_object.id).first()
     player_names = []
@@ -78,10 +80,42 @@ def set_initial_game_state():
     game_object = session.query(Games).filter_by(admin=user_object.id).first()
     raw_players = json.loads(game_object.players)
     if request.form["delete"] == "start":
+        print("IT IS IF")
         game_object.game_started = True
         session.commit()
-        return "Game Start"
+        #Divide up white cards
+        played_black_cards = []
+        player_hands = {}
+        player_hand = 0
+        for i in game_object.players:
+            player_hands[i] = [] 
+            while player_hand != 7:
+                total_white_cards = session.query(WhiteCards).count()
+                select_card = random.randint(0, total_white_cards - 1)
+                if(select_card not in played_black_cards):
+                    tmp_card = session.query(WhiteCards)[select_card].white_cards
+                    played_black_cards.append(select_card)
+                    player_hands[i].append(tmp_card)
+                    player_hand += 1
+        game_object.black_cards_played = json.dumps(played_black_cards)
+        game_object.player_hand = player_hands
+        #Choose turn order
+        admin_id = (session.query(Games.admin).filter_by(admin=user_object.id).first()[0])
+        players_turn_order = raw_players.copy()
+        players_turn_order.append(admin_id)
+        game_object.turn_order = json.dumps(players_turn_order)
+        #Choose first player
+        game_object.turn_selected_player = json.dumps(random.choice(players_turn_order))
+        #Select White Card
+        total_black_cards = session.query(BlackCards).count()
+        select_card = random.randint(0, total_black_cards - 1)
+        tmp_card = session.query(BlackCards)[select_card].black_cards
+        game_object.black_cards_played = json.dumps([select_card])
+        game_object.players_white_card = tmp_card
+        session.commit()
+        return make_response(redirect('/game_id/' + game_object.game_id))
     else:
+        print("ELSE IT IS")
         raw_players.remove(int(request.form["delete"]))
         game_object.players = json.dumps(raw_players)
         session.commit()

@@ -5,22 +5,26 @@
   * [✓] Implement session cookies
   * [✓] Store session cookies in database
   * [✓] Import Cards Against Humanity Questions JSON from github into database
-  * [✓] Pseudocode Game Logic
+  * [✓] Generalized Pseudocode Game Logic
   * [✓] Write user stories
   * [✓] List number of html templates are required
   * [✓] Generate html templates
   * [✓] Map out database game logic and update schema
   * [✓] Document site map of which route does what
   * [✓] Write code so users can choose a display name
-  * [ ] Write code so user can create room and invite other players
+  * [✓] Write code so user can create room and invite other players
     * [✓] Generate and display join link
     * [✓] Allow others to join a room
     * [✓] Let admin remove players that have joined their room
-  * [ ] Write Game logic
-    * [ ] Distribute Black cards
-    * [ ] Choose turn order
-    * [ ] Choose first player and draw white card
+  * [ ] Setup Initial Game State
+    * [✓] Distribute White cards
+    * [✓] Choose turn order
+    * [✓] Choose first player
+    * [✓] Select first white card
+  * [ ] Separate white cards by number of black cards they require
+  * [ ] Review and write in more detail turn pseudocode logic
   * [ ] Write html/css for game user experience
+  * [ ] Write turn logic
 
 ## Game logic Pseudocode
 
@@ -124,3 +128,7 @@ John's turn is next and a white card is selected for his turn and displayed to t
     * choose_black_card.html
     * wait_for_round_winner.html
     * turn_winner.html
+
+## Bugs
+
+* Some parts of game state should lock after game starts
