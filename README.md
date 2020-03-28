@@ -23,6 +23,8 @@
     * [✓] Select first white card
   * [✓] Separate white cards by number of black cards they require
     * [✓] Write code import form json file rather than web
+  * [ ] Restart server when files are changed
+  * [ ] Automatically add cookie if user does not have one
   * [ ] Map out turn phase
   * [ ] Map out master turn html template
   * [ ] Write turn logic
@@ -151,3 +153,7 @@ There are four phases to a turn on CAH
 ## Bugs
 
 * Some parts of game state should lock after game starts
+
+## Links
+
+* [Use HTML Template](https://stackoverflow.com/questions/3206344/passing-html-to-template-using-flask-jinja2)
