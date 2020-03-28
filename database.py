@@ -44,16 +44,16 @@ class Games(Base):
     admin = Column(Integer)
     game_id = Column(String(7))
     game_started = Column(Boolean)
-    players = Column(String(1024))
+    players = Column(String(1024))# JSON list of all players playing
     turn_number = Column(Integer)
-    players_hand = Column(String(1024))
-    players_white_card = Column(String(1024))
-    players_score = Column(String(1024))
-    white_cards_played = Column(String(1024))
-    black_cards_played = Column(String(1024))
-    turn_selected_player = Column(String(1024))
+    players_hand = Column(String(1024))# Every Players hand stored as JSON
+    players_white_card = Column(String(1024))# Current white card in play
+    players_score = Column(String(1024))# Every players score stored as JSON
+    white_cards_played = Column(String(1024))# JSON list of all white cards played
+    black_cards_played = Column(String(1024))# JSON list of all black cards played
+    turn_selected_player = Column(String(1024))# Who's turn it is
     turn_phase = Column(String(1024))
-    turn_black_cards = Column(String(1024))
+    turn_black_cards = Column(String(1024))# JSON object of who has gone so far
     turn_order = Column(String(1024))
 
 class GameMetadata(Base):

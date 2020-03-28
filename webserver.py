@@ -56,7 +56,7 @@ def setup_game():
     if session.query(Games).filter_by(admin=cookie).count() == 0 :
         print("NO IF")
         unique_room_id = generate_random_cookie(7)
-        session.add( Games( admin = user_object.id, game_id = unique_room_id, players="[]", game_started=False) )
+        session.add( Games( admin = user_object.id, game_id = unique_room_id, players=json.dumps([user_object.id]), game_started=False) )
         session.commit()
     game_object = session.query(Games).filter_by(admin=user_object.id).first()
     player_names = []
@@ -82,16 +82,15 @@ def set_initial_game_state():
     if request.form["delete"] == "start":
         print("IT IS IF")
         game_object.game_started = True
-        session.commit()
-        #Divide up white cards
+        #Divide up black cards
         played_black_cards = []
         player_hands = {}
         player_hand = 0
         for i in game_object.players:
             player_hands[i] = [] 
             while player_hand != 7:
-                total_white_cards = session.query(WhiteCards).count()
-                select_card = random.randint(0, total_white_cards - 1)
+                total_black_cards = session.query(BlackCards).count()
+                select_card = random.randint(0, total_black_cards - 1)
                 if(select_card not in played_black_cards):
                     tmp_card = session.query(WhiteCards)[select_card].white_cards
                     played_black_cards.append(select_card)
@@ -105,13 +104,21 @@ def set_initial_game_state():
         players_turn_order.append(admin_id)
         game_object.turn_order = json.dumps(players_turn_order)
         #Choose first player
-        game_object.turn_selected_player = json.dumps(random.choice(players_turn_order))
+        turn_selected_player = random.choice(players_turn_order)
+        game_object.turn_selected_player = json.dumps(turn_selected_player)
         #Select White Card
         total_black_cards = session.query(BlackCards).count()
         select_card = random.randint(0, total_black_cards - 1)
         tmp_card = session.query(BlackCards)[select_card].black_cards
         game_object.black_cards_played = json.dumps([select_card])
         game_object.players_white_card = tmp_card
+        game_object.turn_phase = "ReadWhiteCard"
+        # Setup place for turn black cards
+        turn_black_cards = {}
+        for tmp_player in game_object.players:
+            if tmp_player != turn_selected_player:
+                turn_black_cards[tmp_player] = None
+        game_object.turn_black_cards = json.dumps(turn_black_cards)
         session.commit()
         return make_response(redirect('/game_id/' + game_object.game_id))
     else:
@@ -127,6 +134,10 @@ def play(game_id):
     cookie = request.cookies.get("game_session")
     user_object = session.query(UserSessions).filter_by(user_cookie=cookie).first()
     game_object = session.query(Games).filter_by(game_id=game_id).first()
+    player_names = []
+    raw_players = json.loads(game_object.players)
+    for i in raw_players:
+        player_names.append(session.query(UserSessions).filter_by(id =i).first().player_name)
     if game_object.game_started == False:
         if game_object.players == None or game_object.players == "null":
             game_object.players = json.dumps([user_object.id])
@@ -146,8 +157,38 @@ def play(game_id):
             players = player_names, 
             admin = False
         )
-    else:
-        return "work in process"
+    elif game_object.turn_phase == "ReadWhiteCard" and user_object.id == game_object.turn_selected_player:
+        return render_template(
+            "play.html", 
+            turn_phase = game_object.turn_phase,
+            user_id = user_object.id,
+            game_id = game_object.game_id,
+            player_names = player_names,
+            players = json.dumps(game_object.players),
+            turn_number = game_object.turn_number,
+            players_hand = json.dumps(game_object.players_hand),
+            players_white_card = game_object.players_white_card,
+            players_score = game_object.players_score,
+            turn_selected_player = game_object.turn_selected_player,
+            turn_black_cards = game_object.turn_black_cards
+        )
+    elif game_object.turn_phase == "ReadWhiteCard" and user_object.id != game_object.turn_selected_player:
+        return render_template(
+            "play.html", 
+            players = game_object.players,
+            turn_number = game_object.turn_number,
+            players_hand = game_object.players_hand,
+            players_white_card = game_object.players_white_card,
+            players_score = game_object.players_score,
+            turn_selected_player = game_object.turn_selected_player,
+            turn_black_cards = game_object.turn_black_cards
+        )
+    elif game_object.turn_phase == "ChooseBlackCard" and user_object.id == game_object.turn_selected_player:
+        return "work in progress"
+    elif game_object.turn_phase == "ChooseBlackCard" and user_object.id != game_object.turn_selected_player:
+        return "work in progress"
+    elif game_object.turn_phase == "DisplayWinner":
+        return "work in progress"
 
 if __name__ == '__main__':
     app.run()

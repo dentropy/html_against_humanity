@@ -23,8 +23,8 @@
     * [✓] Select first white card
   * [✓] Separate white cards by number of black cards they require
     * [✓] Write code import form json file rather than web
-  * [ ] Review and write in more detail turn pseudocode logic
-  * [ ] Write html/css for game user experience
+  * [ ] Map out turn phase
+  * [ ] Map out master turn html template
   * [ ] Write turn logic
 
 ## Game logic Pseudocode
@@ -129,6 +129,24 @@ John's turn is next and a white card is selected for his turn and displayed to t
     * choose_black_card.html
     * wait_for_round_winner.html
     * turn_winner.html
+
+## Map out turn phase
+
+There are four phases to a turn on CAH
+
+1. "ReadWhiteCard" Select white card and display it while allowing users to select black cards
+
+   * Data Required:
+     * players
+     * turn_number
+     * players_hand
+     * players_white_card
+     * players_score
+     * turn_selected_player
+     * turn_black_cards
+
+2. "ChooseBlackCard" All players have selected black cards, they are shuffled and user selects winning card
+3. "DisplayWinner" Winner of round is displayed
 
 ## Bugs
 
