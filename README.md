@@ -21,7 +21,8 @@
     * [✓] Choose turn order
     * [✓] Choose first player
     * [✓] Select first white card
-  * [ ] Separate white cards by number of black cards they require
+  * [✓] Separate white cards by number of black cards they require
+    * [✓] Write code import form json file rather than web
   * [ ] Review and write in more detail turn pseudocode logic
   * [ ] Write html/css for game user experience
   * [ ] Write turn logic
