@@ -1,3 +1,4 @@
+#!/usr/bin/python3.6
 import urllib.request
 import json
 from database import session, WhiteCards, BlackCards
