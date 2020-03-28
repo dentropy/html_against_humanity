@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for, render_template, make_response, session, redirect
+from flask import Flask, request, url_for, render_template, make_response, session, redirect, Markup
 from database import session, UserSessions, Games, WhiteCards, BlackCards
 from cookie_generator import generate_random_cookie
 import json
@@ -82,22 +82,6 @@ def set_initial_game_state():
     if request.form["delete"] == "start":
         print("IT IS IF")
         game_object.game_started = True
-        #Divide up black cards
-        played_black_cards = []
-        player_hands = {}
-        player_hand = 0
-        for i in game_object.players:
-            player_hands[i] = [] 
-            while player_hand != 7:
-                total_black_cards = session.query(BlackCards).count()
-                select_card = random.randint(0, total_black_cards - 1)
-                if(select_card not in played_black_cards):
-                    tmp_card = session.query(WhiteCards)[select_card].white_cards
-                    played_black_cards.append(select_card)
-                    player_hands[i].append(tmp_card)
-                    player_hand += 1
-        game_object.black_cards_played = json.dumps(played_black_cards)
-        game_object.player_hand = player_hands
         #Choose turn order
         admin_id = (session.query(Games.admin).filter_by(admin=user_object.id).first()[0])
         players_turn_order = raw_players.copy()
@@ -106,19 +90,41 @@ def set_initial_game_state():
         #Choose first player
         turn_selected_player = random.choice(players_turn_order)
         game_object.turn_selected_player = json.dumps(turn_selected_player)
+        # Setup place for turn black cards, dict of all players except one going
+        turn_black_cards = {}
+        for tmp_player in players_turn_order:
+            if tmp_player != turn_selected_player:
+                turn_black_cards[tmp_player] = None
+        game_object.turn_black_cards = json.dumps(turn_black_cards)
+        #Divide up black cards
+        played_black_cards = []
+        player_hands = {}
+        player_hand_size = 0
+        for i in json.loads(game_object.players):
+            player_hands[i] = [] 
+            while player_hand_size != 7:
+                total_black_cards = session.query(BlackCards).count()
+                select_card = random.randint(0, total_black_cards - 1)
+                if(select_card not in played_black_cards):
+                    tmp_card = session.query(WhiteCards)[select_card].white_cards
+                    played_black_cards.append(select_card)
+                    player_hands[i].append(tmp_card)
+                    player_hand_size += 1
+            player_hand_size = 0
+        game_object.black_cards_played = json.dumps(played_black_cards)
+        game_object.players_hand = json.dumps(player_hands)
         #Select White Card
         total_black_cards = session.query(BlackCards).count()
         select_card = random.randint(0, total_black_cards - 1)
         tmp_card = session.query(BlackCards)[select_card].black_cards
         game_object.black_cards_played = json.dumps([select_card])
-        game_object.players_white_card = tmp_card
+        game_object.players_white_card = json.dumps(tmp_card)
         game_object.turn_phase = "ReadWhiteCard"
-        # Setup place for turn black cards
-        turn_black_cards = {}
-        for tmp_player in game_object.players:
-            if tmp_player != turn_selected_player:
-                turn_black_cards[tmp_player] = None
-        game_object.turn_black_cards = json.dumps(turn_black_cards)
+        #Set players score
+        tmp_players_score = {}
+        for i in json.dumps(game_object.players):
+            tmp_players_score[i] = 0
+        game_object.players_score = json.dumps(tmp_players_score)
         session.commit()
         return make_response(redirect('/game_id/' + game_object.game_id))
     else:
@@ -134,10 +140,10 @@ def play(game_id):
     cookie = request.cookies.get("game_session")
     user_object = session.query(UserSessions).filter_by(user_cookie=cookie).first()
     game_object = session.query(Games).filter_by(game_id=game_id).first()
-    player_names = []
+    player_names = {}
     raw_players = json.loads(game_object.players)
     for i in raw_players:
-        player_names.append(session.query(UserSessions).filter_by(id =i).first().player_name)
+        player_names[str(i)] = session.query(UserSessions).filter_by(id =i).first().player_name
     if game_object.game_started == False:
         if game_object.players == None or game_object.players == "null":
             game_object.players = json.dumps([user_object.id])
@@ -157,31 +163,60 @@ def play(game_id):
             players = player_names, 
             admin = False
         )
-    elif game_object.turn_phase == "ReadWhiteCard" and user_object.id == game_object.turn_selected_player:
+    elif game_object.turn_phase == "ReadWhiteCard":# and user_object.id == json.loads(game_object.turn_selected_player):
+    # Reads white card
+        print(json.loads(game_object.players_hand))
+        print(len(json.loads(game_object.players_hand)))
+        if user_object.id == json.loads(game_object.turn_selected_player):
+            is_it_my_turn = True
+        else:
+            is_it_my_turn = False
+        players_white_card = json.loads(game_object.players_white_card)
+        if type(players_white_card) == type("A"):
+            print("We got an error of quotes in the JSON")
+            players_white_card = json.loads(game_object.players_white_card.replace("'", '"')[1:-1])
         return render_template(
             "play.html", 
+            players_turn = is_it_my_turn,
             turn_phase = game_object.turn_phase,
-            user_id = user_object.id,
+            user_id = str(user_object.id),
             game_id = game_object.game_id,
             player_names = player_names,
-            players = json.dumps(game_object.players),
+            players = json.loads(game_object.players),
             turn_number = game_object.turn_number,
-            players_hand = json.dumps(game_object.players_hand),
-            players_white_card = game_object.players_white_card,
+            players_hand = json.loads(game_object.players_hand),
+            players_white_card = players_white_card,
+            #json.loads(game_object.players_white_card.replace("'", '"')[1:-1]),
             players_score = game_object.players_score,
-            turn_selected_player = game_object.turn_selected_player,
-            turn_black_cards = game_object.turn_black_cards
+            turn_selected_player = is_it_my_turn,
+            turn_black_cards = json.loads(game_object.turn_black_cards)
         )
-    elif game_object.turn_phase == "ReadWhiteCard" and user_object.id != game_object.turn_selected_player:
+    elif game_object.turn_phase == "ReadWhiteCard":
+    # Chooses a black card
+        print(json.loads(game_object.players_hand))
+        print(len(json.loads(game_object.players_hand)))
+        if str(user_object.id) == json.loads(game_object.turn_selected_player):
+            is_it_my_turn = True
+        else:
+            is_it_my_turn = False
+        players_white_card = json.loads(game_object.players_white_card)
+        if type(players_white_card) == type("A"):
+            print("We got an error of quotes in the JSON")
+            players_white_card = json.loads(game_object.players_white_card.replace("'", '"')[1:-1])
         return render_template(
             "play.html", 
-            players = game_object.players,
+            players_turn = False,
+            turn_phase = game_object.turn_phase,
+            user_id = str(user_object.id),
+            game_id = game_object.game_id,
+            player_names = player_names,
+            players = json.loads(game_object.players),
             turn_number = game_object.turn_number,
-            players_hand = game_object.players_hand,
-            players_white_card = game_object.players_white_card,
-            players_score = game_object.players_score,
-            turn_selected_player = game_object.turn_selected_player,
-            turn_black_cards = game_object.turn_black_cards
+            players_hand = json.loads(game_object.players_hand),
+            players_white_card = players_white_card,
+            players_score = json.loads(game_object.players_score),
+            turn_selected_player =  is_it_my_turn,
+            turn_black_cards = json.dumps(game_object.turn_black_cards)
         )
     elif game_object.turn_phase == "ChooseBlackCard" and user_object.id == game_object.turn_selected_player:
         return "work in progress"

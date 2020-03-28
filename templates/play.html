@@ -17,30 +17,30 @@
     <h1>Welcome to Paul Mullins's implementation of Cards Against Humanity</h1>
     <h1>Current turn phase is {{game_state}}</h1>
     <h1>Current turn number is {{turn_number}}</h1>
-    <h1>Your black cards</h1>
-    <h1>White cards and score</h1>
     <hr/>
     {% if turn_phase == "ReadWhiteCard" and players_turn == True %}
         <h1>Waiting for other players to select a black card</h1>
-        <h1>You read {{white_card}}</h1>
+        <p>You read {{players_white_card["text"] | safe}}</p>
         <h1>Currently waiting for other player</h1>
         {% for i in turn_black_cards %}
             {% if turn_black_cards[i] == None %}
-                <p>{{ player_names[player_names.index(turn_black_cards[i])] }} still has to choose</p>
+                <p>{{ player_names[i] }} still has to choose</p>
             {% else %}
-                <p>{{ player_names[player_names.index(turn_black_cards[i])] }} still has chosen</p>
+                <p>{{ player_names[i] }} still has chosen</p>
             {% endif %}
         {% endfor %}
     {% endif %}
 
     {% if turn_phase == "ReadWhiteCard" and players_turn == False %}
-        <h1>{{turn_selected_player}} reads out....</h1>
-        <p>{{players_white_card}}</p>
+        <h1>{{player_names[turn_selected_player]}} reads out....</h1>
+        <p>{{players_white_card["text"] | safe}}</p>
         <h1>Please select one of your black cards</h1>
-        {% for i in player_cards[user_id] %}
+        
+        {% for i in players_hand[user_id] %}
+            {{i}}
             <form id="form_for_{{player}}" action="/game_id/{{game_id}}" method="post">
                 <input type="hidden" name="black_card" value={{i}}>
-                {{i}} <input type="submit" value="{{i}}"> <br><br>
+                <input type="submit" value="{{i}}"> <br><br>
             </form>
         {% endfor %}
     {% endif %}
