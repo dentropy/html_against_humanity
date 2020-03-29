@@ -146,10 +146,10 @@ There are four phases to a turn on CAH
      * row: players_hand
    * Draw new white card
      * row: white_cards and white_cards_played
-   * Drawn card to existing hand
+   * Put new white card in existing hand
      * players_hand
    * Check if all players handed in cards
-     * turn_white_cards and turn_phase
+     * turn_white_cards, turn_phase and players
   
    * Data Required:
       * turn_white_cards
@@ -158,7 +158,7 @@ There are four phases to a turn on CAH
       * players_hand
       * turn_phase
 
-2. "ChooseBlackCard" All players have selected black cards, they are shuffled and user selects winning card
+2. "ChooseWhiteCard" All players have selected black cards, they are shuffled and user selects winning card
 
    * Data Required:
       * turn_selected_player
@@ -179,6 +179,10 @@ There are four phases to a turn on CAH
 ## Bugs
 
 * Some parts of game state should lock after game starts
+* Limit number of white cards to be played
+* Only allowed to play one white card
+* White cards move around on user
+* Should not be able to remove oneself from game
 
 ## Links
 

@@ -16,11 +16,12 @@
 <body>
     <h1>Welcome to Paul Mullins's implementation of Cards Against Humanity</h1>
     <h1>Current turn phase is {{game_state}}</h1>
+    <h1>Current turn phase is <b>{{turn_phase}}</b></h1>
     <h1>Current turn number is {{turn_number}}</h1>
     <hr/>
     {% if turn_phase == "ReadWhiteCard" and players_turn == True %}
         <h1>Waiting for other players to select a black card</h1>
-        <p>You read {{players_white_card["text"] | safe}}</p>
+        <p>You read {{players_white_card | safe}}</p>
         <h1>Currently waiting for other player</h1>
         {{turn_white_cards}}
         {% for i in turn_white_cards %}
@@ -34,7 +35,7 @@
 
     {% if turn_phase == "ReadWhiteCard" and players_turn == False %}
         <h1>{{player_names[user_id]}} reads out....</h1>
-        <p>{{players_white_card["text"] | safe}}</p>
+        <p>{{players_white_card | safe}}</p>
         <h1>Please select one of your black cards</h1>
         
         {% for i in players_hand[user_id] %}
@@ -45,19 +46,19 @@
         {% endfor %}
     {% endif %}
 
-    {% if turn_phase == "ChooseBlackCard" and admin == True %}
+    {% if turn_phase == "ChooseWhiteCard" and players_turn == True %}
         <h1>Your black cards</h1>
     {% endif %}
 
-    {% if turn_phase == "ChooseBlackCard" and admin == False %}
+    {% if turn_phase == "ChooseWhiteCard" and players_turn == False %}
         <h1>Your black cards</h1>
     {% endif %}
 
-    {% if turn_phase == "DisplayWinner" and admin == True %}
+    {% if turn_phase == "DisplayWinner" and players_turn == True %}
         <h1>Your black cards</h1>
     {% endif %}
 
-    {% if turn_phase == "DisplayWinner" and admin == False %}
+    {% if turn_phase == "DisplayWinner" and players_turn == False %}
         <h1>Your black cards</h1>
     {% endif %}
     <hr/>
