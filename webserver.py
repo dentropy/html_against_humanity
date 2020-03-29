@@ -102,6 +102,8 @@ def set_initial_game_state():
     if request.form["delete"] == "start":
         print("IT IS IF")
         game_object.game_started = True
+        game_object.turn_number = 1
+        game_object.previous_winners = json.dumps({})
         #Choose turn order
         admin_id = (session.query(Games.admin).filter_by(admin=user_object.id).first()[0])
         players_turn_order = raw_players.copy()
@@ -221,47 +223,88 @@ def get_user_game_input(game_id):
     cookie = request.cookies.get("game_session")
     user_object = session.query(UserSessions).filter_by(user_cookie=cookie).first()
     game_object = session.query(Games).filter_by(game_id=game_id).first()
-    
-    # Submit white card
-    white_cards_in_played = json.loads(game_object.turn_white_cards)
-    if white_cards_in_played[str(user_object.id)] == None:
-        white_cards_in_played[str(user_object.id)] = request.form["black_card"]
-        game_object.turn_white_cards = json.dumps(white_cards_in_played)
-    else:
-        return make_response(redirect('/game_id/' + game_id))
-    # Remove white card from player
-    all_player_hands = json.loads(game_object.players_hand)
-    played_card_index = all_player_hands[str(user_object.id)].index(request.form["black_card"])
-    del all_player_hands[str(user_object.id)][played_card_index]
-    #all_player_hands[str(user_object.id)].remove(request.form["black_card"])
-    
-    # Draw new white card
-    white_cards_played = json.loads(game_object.white_cards_played)
-    not_already_picked = True
-    while not_already_picked:
-        print("WHILE HAPPENED")
-        total_white_cards = session.query(BlackCards).count()
-        select_card = random.randint(0, total_white_cards - 1)
-        if(select_card not in white_cards_played):
-            tmp_card = session.query(WhiteCards)[select_card].white_cards
-            white_cards_played.append(select_card)
-            not_already_picked = False
-            # Put new white card in existing hand
-            all_player_hands[str(user_object.id)].append(tmp_card)
-    # Save new card drawn to cards played
-    game_object.white_cards_played = json.dumps(white_cards_played)
-    # Save white cards to database
-    game_object.players_hand = json.dumps(all_player_hands)
-    # Check if all players handed in cards
-    count_responses = 0
-    for i in white_cards_in_played.keys():
-        if white_cards_in_played[i] != None:
-            count_responses += 1
-    if count_responses == len(json.loads(game_object.players)) - 1 :
-        print("IF HAPPENS OVER HERE")
-        game_object.turn_phase = "ChooseWhiteCard"
-    # Save everything to database
-    session.commit()
+    if request.form["turn_phase"] == "ReadWhiteCard":
+        print(type(request.form))
+        # Submit white card
+        white_cards_in_played = json.loads(game_object.turn_white_cards)
+        if white_cards_in_played[str(user_object.id)] == None:
+            white_cards_in_played[str(user_object.id)] = request.form["black_card"]
+            game_object.turn_white_cards = json.dumps(white_cards_in_played)
+        else:
+            return make_response(redirect('/game_id/' + game_id))
+        # Remove white card from player
+        all_player_hands = json.loads(game_object.players_hand)
+        played_card_index = all_player_hands[str(user_object.id)].index(request.form["black_card"])
+        del all_player_hands[str(user_object.id)][played_card_index]
+        #all_player_hands[str(user_object.id)].remove(request.form["black_card"])
+        
+        # Draw new white card
+        white_cards_played = json.loads(game_object.white_cards_played)
+        not_already_picked = True
+        while not_already_picked:
+            print("WHILE HAPPENED")
+            total_white_cards = session.query(BlackCards).count()
+            select_card = random.randint(0, total_white_cards - 1)
+            if(select_card not in white_cards_played):
+                tmp_card = session.query(WhiteCards)[select_card].white_cards
+                white_cards_played.append(select_card)
+                not_already_picked = False
+                # Put new white card in existing hand
+                all_player_hands[str(user_object.id)].append(tmp_card)
+        # Save new card drawn to cards played
+        game_object.white_cards_played = json.dumps(white_cards_played)
+        # Save white cards to database
+        game_object.players_hand = json.dumps(all_player_hands)
+        # Check if all players handed in cards
+        count_responses = 0
+        for i in white_cards_in_played.keys():
+            if white_cards_in_played[i] != None:
+                count_responses += 1
+        if count_responses == len(json.loads(game_object.players)) - 1 :
+            print("IF HAPPENS OVER HERE")
+            game_object.turn_phase = "ChooseWhiteCard"
+        # Save everything to database
+        session.commit()
+    elif request.form["turn_phase"] == "ChooseWhiteCard":
+        # Check if correct player turn_selected_player
+        if str(user_object.id) != game_object.turn_selected_player:
+            return make_response(redirect('/game_id/' + game_id))
+        # Find who sent in white card turn_white_cards
+        all_white_cards = json.loads(game_object.turn_white_cards)
+        for key in all_white_cards:
+            if all_white_cards[key] == request.form["white_card_winner"]:
+                winner = key
+                print("WINNER IS " + str(winner))
+                # Increment score of winning player
+                all_players_score = json.loads(game_object.players_score)
+                all_players_score[winner] += 1
+                game_object.players_score = json.dumps(all_players_score)
+        # Set next player turn_selected_player
+        turn_order = json.loads(game_object.turn_order)
+        print("\n\n" + str(turn_order) + "\n\n")
+        old_player = turn_order.index(json.loads(game_object.turn_selected_player))
+        new_player = old_player + 1
+        if new_player == len(turn_order):
+            new_player = 0
+        next_player_turn = turn_order[new_player]
+        game_object.turn_selected_player = json.dumps(next_player_turn)
+        # Reset turn_white_cards
+        turn_white_cards = {}
+        for tmp_player in turn_order:
+            if tmp_player != next_player_turn:
+                turn_white_cards[tmp_player] = None
+        game_object.turn_white_cards = json.dumps(turn_white_cards)
+        # Set next turn
+        turn_num = game_object.turn_number
+        turn_num += 1
+        game_object.turn_number = turn_num
+        # Save who won
+        previous_winners = json.loads(game_object.previous_winners)
+        previous_winners[turn_num-1] = {}
+        previous_winners[turn_num-1]["Winner"] = winner
+        previous_winners[turn_num-1]["whiteCard"] = request.form["white_card_winner"]
+        previous_winners[turn_num-1]["blackCard"] = game_object.players_white_card
+        game_object.previous_winners = json.dumps(previous_winners)
     return make_response(redirect('/game_id/' + game_id))
 
 if __name__ == '__main__':

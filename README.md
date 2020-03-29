@@ -30,6 +30,7 @@
   * [ ] Map out turn phase
   * [ ] Map out master turn html template
   * [ ] Write turn logic
+  * [ ] Webserver automatically fetch json against humanity
 
 ## Game logic Pseudocode
 
@@ -163,7 +164,9 @@ There are four phases to a turn on CAH
    * Data Required:
       * turn_selected_player
       * turn_white_cards
+      * Players
       * turn_phase
+      * turn_order
   
    * Display all cards to who's turn it is and have them choose one
 
@@ -184,6 +187,8 @@ There are four phases to a turn on CAH
 * White cards move around on user
 * Should not be able to remove oneself from game
 * Games work with one or two players
+* If cookie not in database there are a lot of errors
+* Players represented multiple times in turn order
 
 ## Links
 

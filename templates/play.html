@@ -39,6 +39,7 @@
         
         {% for i in players_hand[user_id] %}
             <form id="form_for_{{player}}" action="/game_id/{{game_id}}" method="post">
+                <input type="hidden" name="turn_phase" value="{{turn_phase}}">
                 <input type="hidden" name="black_card" value="{{i}}">
                 <input type="submit" value="{{i}}"><br><br>
             </form>
@@ -49,6 +50,7 @@
         <h1>Please choose one of the following cards to win</h1>
         {% for i in turn_white_cards.keys() %}
         <form id="form_for_{{player}}" action="/game_id/{{game_id}}" method="post">
+            <input type="hidden" name="turn_phase" value="{{turn_phase}}">
             <input type="hidden" name="white_card_winner" value="{{turn_white_cards[i]}}">
             <input type="submit" value="{{turn_white_cards[i]}}"><br><br>
         </form>
