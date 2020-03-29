@@ -14,16 +14,16 @@ else:
     cards = json.loads(cards_url_response.read())
 number_of_cards = session.query(WhiteCards.white_cards).count()
 if number_of_cards == 0:
-    for i in cards["blackCards"]:
-        session.add( BlackCards( black_cards = str(i) ) )
-        print(i)
     string_type = type("S")
+    for i in cards["blackCards"]:
+        if type(i) != string_type:
+            session.add( BlackCards( black_cards = str(i["text"]), num_white_cards = int(i["pick"]) ) )
+        else:
+            session.add( BlackCards( white_cards = str(i),num_white_cards = 1 ))
+        print(i)
     for i in cards["whiteCards"]:
         print(i)
-        if type(i) != string_type:
-            session.add( WhiteCards( white_cards = str(i["text"]),num_black_cards = int(i["pick"]) ))
-        else:
-            session.add( WhiteCards( white_cards = str(i),num_black_cards = 1 ))
+        session.add( WhiteCards( white_cards = str(i)))
 
     session.commit()
     print("Successfully imported cards")

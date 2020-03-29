@@ -31,12 +31,12 @@ class WhiteCards(Base):
     __tablename__ = "WhiteCards"
     id = Column(Integer, primary_key=True)
     white_cards = Column(String(1024))
-    num_black_cards = Column(Integer)
 
 class BlackCards(Base):
     __tablename__ = "BlackCards"
     id = Column(Integer, primary_key=True)
     black_cards = Column(String(1024))
+    num_white_cards = Column(Integer)
 
 class Games(Base):
     __tablename__ = "Games"
