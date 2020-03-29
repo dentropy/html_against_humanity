@@ -24,7 +24,9 @@
   * [✓] Separate white cards by number of black cards they require
     * [✓] Write code import form json file rather than web
   * [✓] Restart server when files are changed
-  * [ ] Automatically add cookie if user does not have one
+  * [✓] Automatically add cookie if user does not have one
+  * [✓] Have API end point to generate new cookie
+  * [ ] List what data in database has to turn for each phase of turn
   * [ ] Map out turn phase
   * [ ] Map out master turn html template
   * [ ] Write turn logic
@@ -138,17 +140,41 @@ There are four phases to a turn on CAH
 
 1. "ReadWhiteCard" Select white card and display it while allowing users to select black cards
 
-   * Data Required:
-     * players
-     * turn_number
+   * Submit White Card
+     * row: turn_white_cards
+   * Remove white card from player hand
+     * row: players_hand
+   * Draw new white card
+     * row: white_cards and white_cards_played
+   * Drawn card to existing hand
      * players_hand
-     * players_white_card
-     * players_score
-     * turn_selected_player
-     * turn_black_cards
+   * Check if all players handed in cards
+     * turn_white_cards and turn_phase
+  
+   * Data Required:
+      * turn_white_cards
+      * white_cards_played
+      * white_cards
+      * players_hand
+      * turn_phase
 
 2. "ChooseBlackCard" All players have selected black cards, they are shuffled and user selects winning card
+
+   * Data Required:
+      * turn_selected_player
+      * turn_white_cards
+      * turn_phase
+  
+   * Display all cards to who's turn it is and have them choose one
+
 3. "DisplayWinner" Winner of round is displayed
+
+   * Data Required:
+      * turn_selected_player
+      * turn_white_cards
+      * turn_phase
+      * turn_number
+      * white_cards_played
 
 ## Bugs
 
