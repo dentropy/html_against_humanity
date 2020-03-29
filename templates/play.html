@@ -22,11 +22,12 @@
         <h1>Waiting for other players to select a black card</h1>
         <p>You read {{players_white_card["text"] | safe}}</p>
         <h1>Currently waiting for other player</h1>
-        {% for i in turn_black_cards %}
-            {% if turn_black_cards[i] == None %}
+        {{turn_white_cards}}
+        {% for i in turn_white_cards %}
+            {% if turn_white_cards[i] == None %}
                 <p>{{ player_names[i] }} still has to choose</p>
             {% else %}
-                <p>{{ player_names[i] }} still has chosen</p>
+                <p>{{ player_names[i] }} has chosen</p>
             {% endif %}
         {% endfor %}
     {% endif %}

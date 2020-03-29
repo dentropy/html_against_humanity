@@ -111,11 +111,11 @@ def set_initial_game_state():
         turn_selected_player = random.choice(players_turn_order)
         game_object.turn_selected_player = json.dumps(turn_selected_player)
         # Setup place for turn black cards, dict of all players except one going
-        turn_black_cards = {}
+        turn_white_cards = {}
         for tmp_player in players_turn_order:
             if tmp_player != turn_selected_player:
-                turn_black_cards[tmp_player] = None
-        game_object.turn_black_cards = json.dumps(turn_black_cards)
+                turn_white_cards[tmp_player] = None
+        game_object.turn_white_cards = json.dumps(turn_white_cards)
         # Divide up White cards
         ## TODO gotta rename some of this stuff
         played_black_cards = []
@@ -211,7 +211,7 @@ def play(game_id):
             players_score = game_object.players_score,
             turn_selected_player = json.loads(game_object.turn_selected_player),
             is_it_my_turn = is_it_my_turn,
-            turn_black_cards = json.loads(game_object.turn_black_cards)
+            turn_white_cards = json.loads(game_object.turn_white_cards)
         )
     elif game_object.turn_phase == "ChooseBlackCard" and user_object.id == game_object.turn_selected_player:
         return "work in progress"
@@ -227,8 +227,9 @@ def get_user_game_input(game_id):
     game_object = session.query(Games).filter_by(game_id=game_id).first()
     
     # Submit white card
-    white_cards_in_played = json.loads(game_object.turn_black_cards)
+    white_cards_in_played = json.loads(game_object.turn_white_cards)
     white_cards_in_played[str(user_object.id)] = request.form["black_card"]
+    game_object.turn_white_cards = json.dumps(white_cards_in_played)
 
     # Remove card from player
     all_player_hands = json.loads(game_object.players_hand)
