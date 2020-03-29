@@ -6,6 +6,7 @@ import random
 import copy
 
 app = Flask(__name__)
+TEMPLATES_AUTO_RELOAD = True
 #app.config['SECRET_KEY'] =  'e5ac358c-f0bf-11e5-9e39-d3b532c10a28'
 
 @app.route('/')
@@ -199,4 +200,5 @@ def play(game_id):
         return "work in progress"
 
 if __name__ == '__main__':
-    app.run()
+    app.run(use_reloader=True, debug=False)
+    # https://stackoverflow.com/questions/60539952/is-it-possible-to-change-code-of-flask-without-rerunning-the-flask-server-after
