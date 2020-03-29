@@ -183,6 +183,7 @@ There are four phases to a turn on CAH
 * Only allowed to play one white card
 * White cards move around on user
 * Should not be able to remove oneself from game
+* Games work with one or two players
 
 ## Links
 

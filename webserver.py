@@ -184,16 +184,16 @@ def play(game_id):
             players = player_names, 
             admin = False
         )
-    elif game_object.turn_phase == "ReadWhiteCard":
-    # Reads white card
-        print(json.loads(game_object.players_hand))
-        print(len(json.loads(game_object.players_hand)))
+    elif game_object.turn_phase == "ReadWhiteCard" or game_object.turn_phase == "ChooseWhiteCard":
+        #print(json.loads(game_object.players_hand))
+        #print(len(json.loads(game_object.players_hand)))
         if user_object.id == json.loads(game_object.turn_selected_player):
             is_it_my_turn = True
         else:
             is_it_my_turn = False
         players_white_card = game_object.players_white_card
-        print(players_white_card)
+        #print(players_white_card)
+        # TODO Test if one can remove below three lines
         if type(players_white_card) == type("A"):
             print("We got an error of quotes in the JSON")
             players_white_card = game_object.players_white_card
@@ -208,14 +208,11 @@ def play(game_id):
             turn_number = game_object.turn_number,
             players_hand = json.loads(game_object.players_hand),
             players_white_card = players_white_card,
-            #json.loads(game_object.players_white_card.replace("'", '"')[1:-1]),
             players_score = game_object.players_score,
             turn_selected_player = json.loads(game_object.turn_selected_player),
             is_it_my_turn = is_it_my_turn,
             turn_white_cards = json.loads(game_object.turn_white_cards)
         )
-    elif game_object.turn_phase == "ChooseWhiteCard":
-        return "work in progress"
     elif game_object.turn_phase == "DisplayWinner":
         return "work in progress"
 
