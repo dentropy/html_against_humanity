@@ -304,7 +304,11 @@ def get_user_game_input(game_id):
         previous_winners[turn_num-1]["Winner"] = winner
         previous_winners[turn_num-1]["whiteCard"] = request.form["white_card_winner"]
         previous_winners[turn_num-1]["blackCard"] = game_object.players_white_card
+        # Reset game phase
+        game_object.turn_phase = "ReadWhiteCard"
         game_object.previous_winners = json.dumps(previous_winners)
+        # Save everything to database
+        session.commit()
     return make_response(redirect('/game_id/' + game_id))
 
 if __name__ == '__main__':
