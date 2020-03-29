@@ -97,7 +97,8 @@ def set_initial_game_state():
             if tmp_player != turn_selected_player:
                 turn_black_cards[tmp_player] = None
         game_object.turn_black_cards = json.dumps(turn_black_cards)
-        #Divide up black cards
+        # Divide up White cards
+        ## TODO gotta rename some of this stuff
         played_black_cards = []
         player_hands = {}
         player_hand_size = 0
@@ -112,7 +113,7 @@ def set_initial_game_state():
                     player_hands[i].append(tmp_card)
                     player_hand_size += 1
             player_hand_size = 0
-        game_object.black_cards_played = json.dumps(played_black_cards)
+        game_object.white_cards_played = json.dumps(played_black_cards)
         game_object.players_hand = json.dumps(player_hands)
         #Select White Card
         total_black_cards = session.query(BlackCards).count()
@@ -136,7 +137,7 @@ def set_initial_game_state():
         return make_response(redirect('/play'))
         
 
-@app.route('/game_id/<game_id>')
+@app.route('/game_id/<game_id>', methods=['GET'])
 def play(game_id):
     cookie = request.cookies.get("game_session")
     user_object = session.query(UserSessions).filter_by(user_cookie=cookie).first()
@@ -189,7 +190,8 @@ def play(game_id):
             players_white_card = players_white_card,
             #json.loads(game_object.players_white_card.replace("'", '"')[1:-1]),
             players_score = game_object.players_score,
-            turn_selected_player = is_it_my_turn,
+            turn_selected_player = json.loads(game_object.turn_selected_player),
+            is_it_my_turn = is_it_my_turn,
             turn_black_cards = json.loads(game_object.turn_black_cards)
         )
     elif game_object.turn_phase == "ChooseBlackCard" and user_object.id == game_object.turn_selected_player:
@@ -199,6 +201,43 @@ def play(game_id):
     elif game_object.turn_phase == "DisplayWinner":
         return "work in progress"
 
+@app.route('/game_id/<game_id>', methods=['POST'])
+def get_user_game_input(game_id):
+    cookie = request.cookies.get("game_session")
+    user_object = session.query(UserSessions).filter_by(user_cookie=cookie).first()
+    game_object = session.query(Games).filter_by(game_id=game_id).first()
+    
+    # Submit white card
+    white_cards_in_played = json.loads(game_object.turn_black_cards)
+    white_cards_in_played[str(user_object.id)] = request.form["black_card"]
+
+    # Remove card from player
+    all_player_hands = json.loads(game_object.players_hand)
+    played_card_index = all_player_hands[str(user_object.id)].index(request.form["black_card"])
+    del all_player_hands[str(user_object.id)][played_card_index]
+    #all_player_hands[str(user_object.id)].remove(request.form["black_card"])
+    
+    # Draw new white card
+    white_cards_played = json.loads(game_object.white_cards_played)
+    not_already_picked = True
+    while not_already_picked:
+        print("WHILE HAPPENED")
+        total_white_cards = session.query(BlackCards).count()
+        select_card = random.randint(0, total_white_cards - 1)
+        if(select_card not in white_cards_played):
+            tmp_card = session.query(WhiteCards)[select_card].white_cards
+            all_player_hands[str(user_object.id)].append(tmp_card)
+            white_cards_played.append(select_card)
+            not_already_picked = False
+            # Put new card in hand
+    # Save new card drawn to cards played
+    game_object.white_cards_played = json.dumps(white_cards_played)
+    # Save white cards to database
+    game_object.players_hand = json.dumps(all_player_hands)
+    session.commit()
+    return make_response(redirect('/game_id/' + game_id))
+
 if __name__ == '__main__':
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run(use_reloader=True, debug=False)
     # https://stackoverflow.com/questions/60539952/is-it-possible-to-change-code-of-flask-without-rerunning-the-flask-server-after

@@ -16,7 +16,7 @@
     * [✓] Generate and display join link
     * [✓] Allow others to join a room
     * [✓] Let admin remove players that have joined their room
-  * [ ] Setup Initial Game State
+  * [✓] Setup Initial Game State
     * [✓] Distribute White cards
     * [✓] Choose turn order
     * [✓] Choose first player

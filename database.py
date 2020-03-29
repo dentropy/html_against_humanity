@@ -53,7 +53,7 @@ class Games(Base):
     black_cards_played = Column(String(1024))# JSON list of all black cards played
     turn_selected_player = Column(String(1024))# Who's turn it is
     turn_phase = Column(String(1024))
-    turn_black_cards = Column(String(1024))# JSON object of who has gone so far
+    turn_black_cards = Column(String(1024))# JSON object of who has gone so far this round
     turn_order = Column(String(1024))
 
 class GameMetadata(Base):
