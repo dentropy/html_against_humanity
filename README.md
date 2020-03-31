@@ -31,7 +31,7 @@
   * [✓] Map out master turn html template
   * [✓] Write turn logic
   * [✓] Webserver automatically fetch json against humanity
-  * [ ] Delete unused HTML files
+  * [✓] Delete unused HTML files
 
 ## Game logic Pseudocode
 
