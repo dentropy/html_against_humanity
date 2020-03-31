@@ -32,6 +32,8 @@
   * [✓] Write turn logic
   * [✓] Webserver automatically fetch json against humanity
   * [✓] Delete unused HTML files
+  * [✓] Do not show admin as able to kick themselves from their own game
+  * [ ] Play though game
 
 ## Game logic Pseudocode
 

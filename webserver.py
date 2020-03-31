@@ -83,6 +83,7 @@ def setup_game():
     game_object = session.query(Games).filter_by(admin=user_object.id).first()
     player_names = []
     raw_players = json.loads(game_object.players)
+    raw_players.remove(user_object.id)
     for i in raw_players:
         player_names.append(session.query(UserSessions).filter_by(id =i).first().player_name)
     session.close()
@@ -92,7 +93,8 @@ def setup_game():
         players = player_names, 
         raw_players=raw_players,
         player_range = range(len(raw_players)),
-        admin = True
+        admin = True,
+        user_object = user_object.id
     )
 
 @app.route('/play/', methods=['POST'])
