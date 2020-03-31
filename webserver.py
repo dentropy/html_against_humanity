@@ -1,9 +1,11 @@
+#!/usr/bin/python3.6
 from flask import Flask, request, url_for, render_template, make_response, session, redirect, Markup
 from database import session, UserSessions, Games, WhiteCards, BlackCards
 from cookie_generator import generate_random_cookie
 import json
 import random
 import copy
+from startup import startup
 
 app = Flask(__name__)
 TEMPLATES_AUTO_RELOAD = True
@@ -312,6 +314,7 @@ def get_user_game_input(game_id):
     return make_response(redirect('/game_id/' + game_id))
 
 if __name__ == '__main__':
+    startup()
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run(use_reloader=True, debug=False)
     # https://stackoverflow.com/questions/60539952/is-it-possible-to-change-code-of-flask-without-rerunning-the-flask-server-after

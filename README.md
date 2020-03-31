@@ -26,11 +26,11 @@
   * [✓] Restart server when files are changed
   * [✓] Automatically add cookie if user does not have one
   * [✓] Have API end point to generate new cookie
-  * [ ] List what data in database has to turn for each phase of turn
-  * [ ] Map out turn phase
-  * [ ] Map out master turn html template
-  * [ ] Write turn logic
-  * [ ] Webserver automatically fetch json against humanity
+  * [✓] List what data in database has to turn for each phase of turn
+  * [✓] Map out turn phase
+  * [✓] Map out master turn html template
+  * [✓] Write turn logic
+  * [✓] Webserver automatically fetch json against humanity
   * [ ] Delete unused HTML files
 
 ## Game logic Pseudocode
