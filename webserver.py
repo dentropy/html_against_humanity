@@ -92,9 +92,8 @@ def setup_game():
         game_id = game_object.game_id, 
         players = player_names, 
         raw_players=raw_players,
-        player_range = range(len(raw_players)),
-        admin = True,
-        user_object = user_object.id
+        player_range = range(len(player_names)),
+        admin = True
     )
 
 @app.route('/play/', methods=['POST'])

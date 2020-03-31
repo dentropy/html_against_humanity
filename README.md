@@ -33,6 +33,10 @@
   * [✓] Webserver automatically fetch json against humanity
   * [✓] Delete unused HTML files
   * [✓] Do not show admin as able to kick themselves from their own game
+  * [ ] Show player names rather than ID's in game lobby
+  * [ ] After player send in card tell them they have to wait
+  * [ ] Show home page on every page
+  * [ ] Inject javascript that refreshes page
   * [ ] Play though game
 
 ## Game logic Pseudocode
