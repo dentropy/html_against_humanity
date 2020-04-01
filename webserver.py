@@ -198,6 +198,17 @@ def play(game_id):
             is_it_my_turn = False
         players_white_card = game_object.players_white_card
         #print(players_white_card)
+
+        # Tell player to wait for other players to submit their white cards
+        white_cards_in_played = json.loads(game_object.turn_white_cards)
+        if str(user_object.id) in white_cards_in_played:
+            if white_cards_in_played[str(user_object.id)] == None:
+                slow_down = False
+            else:
+                slow_down = True
+        else:
+            slow_down = False
+
         # TODO Test if one can remove below three lines
         if type(players_white_card) == type("A"):
             print("We got an error of quotes in the JSON")
@@ -216,7 +227,8 @@ def play(game_id):
             players_score = game_object.players_score,
             turn_selected_player = json.loads(game_object.turn_selected_player),
             is_it_my_turn = is_it_my_turn,
-            turn_white_cards = json.loads(game_object.turn_white_cards)
+            turn_white_cards = json.loads(game_object.turn_white_cards),
+            slow_down = slow_down
         )
     elif game_object.turn_phase == "DisplayWinner":
         return "work in progress"
