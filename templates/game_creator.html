@@ -17,7 +17,7 @@
     <h1>Welcome to Paul Mullins's implementation of Cards Against Humanity</h1>
     <p>One can invite and see who they are going to play with here</p>
     <p>Game ID: {{game_id}}</p>
-    <a href="/game_id/{{game_id}}">http://localhost:5000/game_id/{{game_id}}</a>
+    <a href="/game_id/{{game_id}}">http://{{mah_domain}}:5000/game_id/{{game_id}}</a>
     {% if players == None %}
         <p>There are currently no players in your lobby</p>
     {% else %}

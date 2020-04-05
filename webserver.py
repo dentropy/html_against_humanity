@@ -9,7 +9,7 @@ from startup import startup
 
 app = Flask(__name__)
 TEMPLATES_AUTO_RELOAD = True
-#app.config['SECRET_KEY'] =  'e5ac358c-f0bf-11e5-9e39-d3b532c10a28'
+mah_domain = "localhost"
 
 @app.route('/cookie')
 def create_cookie():
@@ -93,7 +93,8 @@ def setup_game():
         players = player_names, 
         raw_players=raw_players,
         player_range = range(len(player_names)),
-        admin = True
+        admin = True,
+        mah_domain = mah_domain
     )
 
 @app.route('/play/', methods=['POST'])
