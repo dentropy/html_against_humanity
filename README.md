@@ -40,7 +40,6 @@
   * [✓] Have variable for server IP/dns name
   * [ ] Test end game condition
 
-
 ## Game logic Pseudocode
 
 * Cards are distributed
