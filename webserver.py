@@ -292,7 +292,7 @@ def get_user_game_input(game_id):
                 print("WINNER IS " + str(winner))
                 # Increment score of winning player
                 all_players_score = json.loads(game_object.players_score)
-                all_players_score[winner] += 1
+                all_players_score[winner] = int(all_players_score[winner]) + 1
                 game_object.players_score = json.dumps(all_players_score)
         # Set next player turn_selected_player
         turn_order = json.loads(game_object.turn_order)
