@@ -14,9 +14,9 @@
 </head>
 
 <body>
-    <h1>Welcome to Paul Mullins's implementation of Cards Against Humanity</h1>
-    <h1>Current turn phase is <b>{{turn_phase}}</b></h1>
-    <h1>Current turn number is {{turn_number}}</h1>
+    <a href="/">Welcome to Paul Mullins's implementation of Cards Against Humanity</a>
+    <p>Current turn phase is <b>{{turn_phase}}</b></p>
+    <p>Current turn number is {{turn_number}}</p>
     <hr/>
     {% if turn_phase == "ReadWhiteCard" and players_turn == True %}
         <h1>Waiting for other players to select a black card</h1>
@@ -33,9 +33,9 @@
     {% endif %}
 
     {% if turn_phase == "ReadWhiteCard" and players_turn == False  and slow_down == False%}
-        <h1>{{player_names[user_id]}} reads out....</h1>
-        <p>{{players_white_card | safe}}</p>
-        <h1>Please select one of your black cards</h1>
+        <p>{{player_names[user_id]}} reads out....</p>
+        <h1>{{players_white_card | safe}}</h1>
+        <h1>Please select one of your black cards below</h1>
         
         {% for i in players_hand[user_id] %}
             <form id="form_for_{{player}}" action="/game_id/{{game_id}}" method="post">

@@ -36,8 +36,10 @@
   * [✓] Show player names rather than ID's in game lobby
   * [✓] After player send in card tell them they have to wait
   * [ ] Show home page on every page
-  * [ ] Inject javascript that refreshes page
-  * [ ] Play though game
+  * [✓] Inject javascript that refreshes page
+  * [✓] Have variable for server IP/dns name
+  * [ ] Test end game condition
+
 
 ## Game logic Pseudocode
 
