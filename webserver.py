@@ -10,6 +10,7 @@ from startup import startup
 app = Flask(__name__)
 TEMPLATES_AUTO_RELOAD = True
 mah_domain = "localhost"
+game_max_score = 3
 
 @app.route('/cookie')
 def create_cookie():
@@ -169,6 +170,7 @@ def play(game_id):
     cookie = request.cookies.get("game_session")
     user_object = session.query(UserSessions).filter_by(user_cookie=cookie).first()
     game_object = session.query(Games).filter_by(game_id=game_id).first()
+    print("HASDASD", game_object.turn_phase)
     player_names = {}
     raw_players = json.loads(game_object.players)
     for i in raw_players:
@@ -236,7 +238,17 @@ def play(game_id):
             slow_down = slow_down
         )
     elif game_object.turn_phase == "DisplayWinner":
-        return "work in progress"
+        return render_template(
+            "game_winner.html", 
+            MAH_WINNER = player_names[game_object.game_winner],
+            turn_phase = game_object.turn_phase,
+            user_id = str(user_object.id),
+            game_id = game_object.game_id,
+            player_names = player_names,
+            players = json.loads(game_object.players),
+            turn_number = game_object.turn_number,
+            players_score = json.loads(game_object.players_score),
+        )
 
 @app.route('/game_id/<game_id>', methods=['POST'])
 def get_user_game_input(game_id):
@@ -297,8 +309,13 @@ def get_user_game_input(game_id):
                 print("WINNER IS " + str(winner))
                 # Increment score of winning player
                 all_players_score = json.loads(game_object.players_score)
-                print(type(int(winner)))
                 all_players_score[winner] = all_players_score[winner] + 1
+                print(all_players_score)
+                print("all_players_score[winner] = ", str(all_players_score[winner]))
+                if all_players_score[winner] >= game_max_score:
+                    print("Looks like we have a winner")
+                    game_object.turn_phase = "DisplayWinner"
+                    game_object.game_winner = winner
                 game_object.players_score = json.dumps(all_players_score)
         # Set next player turn_selected_player
         turn_order = json.loads(game_object.turn_order)
@@ -326,7 +343,8 @@ def get_user_game_input(game_id):
         previous_winners[turn_num-1]["whiteCard"] = request.form["white_card_winner"]
         previous_winners[turn_num-1]["blackCard"] = game_object.players_white_card
         # Reset game phase
-        game_object.turn_phase = "ReadWhiteCard"
+        if game_object.turn_phase != "DisplayWinner":
+            game_object.turn_phase = "ReadWhiteCard"
         game_object.previous_winners = json.dumps(previous_winners)
         # Save everything to database
         session.commit()

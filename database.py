@@ -59,6 +59,7 @@ class Games(Base):
     turn_white_cards = Column(String(1024))# JSON object, of who has gone so far this round
     turn_order = Column(String(1024))# JSON list
     previous_winners = Column(String(1024))# JSON dict
+    game_winner = Column(String(128))
 
 class GameMetadata(Base):
     __tablename__ = "GameMetadata"

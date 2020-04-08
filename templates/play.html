@@ -20,7 +20,6 @@
     <hr/>
     {% for i in players_score %}
       {{player_names[i]}} has a score of {{players_score[i]}}<br>
-      {{i}}<br>
     {% endfor %}
     {% if turn_phase == "ReadWhiteCard" and players_turn == True %}
         <h1>Waiting for other players to select a black card</h1>

@@ -38,9 +38,9 @@
   * [ ] Show home page on every page
   * [✓] Inject javascript that refreshes page
   * [✓] Have variable for server IP/dns name
-  * [ ] Display user score
+  * [✓] Display user score
   * [✓] When player choosing white card, take out debugging information
-  * [ ] Test end game condition
+  * [✓] Test end game condition
 
 ## Game logic Pseudocode
 
