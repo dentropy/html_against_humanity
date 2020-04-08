@@ -18,6 +18,10 @@
     <p>Current turn phase is <b>{{turn_phase}}</b></p>
     <p>Current turn number is {{turn_number}}</p>
     <hr/>
+    {% for i in players_score %}
+      {{player_names[i]}} has a score of {{players_score[i]}}<br>
+      {{i}}<br>
+    {% endfor %}
     {% if turn_phase == "ReadWhiteCard" and players_turn == True %}
         <h1>Waiting for other players to select a black card</h1>
         <p>You read {{players_white_card | safe}}</p>

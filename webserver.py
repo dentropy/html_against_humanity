@@ -149,9 +149,11 @@ def set_initial_game_state():
         game_object.turn_phase = "ReadWhiteCard"
         #Set players score
         tmp_players_score = {}
-        for i in json.dumps(game_object.players):
+        for i in json.loads(game_object.players):
             tmp_players_score[i] = 0
+            print(i)
         game_object.players_score = json.dumps(tmp_players_score)
+        print(tmp_players_score)
         session.commit()
         return make_response(redirect('/game_id/' + game_object.game_id))
     else:
@@ -188,7 +190,8 @@ def play(game_id):
             "game_creator.html", 
             game_id = game_object.game_id,
             players = player_names, 
-            admin = False
+            admin = False,
+            mah_domain = mah_domain
         )
     elif game_object.turn_phase == "ReadWhiteCard" or game_object.turn_phase == "ChooseWhiteCard":
         #print(json.loads(game_object.players_hand))
@@ -214,6 +217,7 @@ def play(game_id):
         if type(players_white_card) == type("A"):
             print("We got an error of quotes in the JSON")
             players_white_card = game_object.players_white_card
+        print((game_object.players_score))
         return render_template(
             "play.html", 
             players_turn = is_it_my_turn,
@@ -225,7 +229,7 @@ def play(game_id):
             turn_number = game_object.turn_number,
             players_hand = json.loads(game_object.players_hand),
             players_white_card = players_white_card,
-            players_score = game_object.players_score,
+            players_score = json.loads(game_object.players_score),
             turn_selected_player = json.loads(game_object.turn_selected_player),
             is_it_my_turn = is_it_my_turn,
             turn_white_cards = json.loads(game_object.turn_white_cards),
@@ -294,7 +298,7 @@ def get_user_game_input(game_id):
                 # Increment score of winning player
                 all_players_score = json.loads(game_object.players_score)
                 print(type(int(winner)))
-                all_players_score[winner] = int(winner) + 1
+                all_players_score[winner] = all_players_score[winner] + 1
                 game_object.players_score = json.dumps(all_players_score)
         # Set next player turn_selected_player
         turn_order = json.loads(game_object.turn_order)
