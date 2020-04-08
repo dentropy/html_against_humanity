@@ -22,7 +22,6 @@
         <h1>Waiting for other players to select a black card</h1>
         <p>You read {{players_white_card | safe}}</p>
         <h1>Currently waiting for other player</h1>
-        {{turn_white_cards}}
         {% for i in turn_white_cards %}
             {% if turn_white_cards[i] == None %}
                 <p>{{ player_names[i] }} still has to choose</p>
