@@ -1,5 +1,13 @@
 # Implementation web based Cards Against Humanity in Python
 
+## Install Instructions
+
+``` bash
+pip3 install sqlalchemy
+pip3 install flask
+python3 webserver.py
+```
+
 * TODO
   * [✓] Write HTML for homepage
   * [✓] Implement session cookies
