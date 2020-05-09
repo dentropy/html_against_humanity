@@ -3,9 +3,18 @@
 ## Install Instructions
 
 ``` bash
-pip3 install sqlalchemy
-pip3 install flask
-python3 webserver.py
+# To run using docker
+# cd into this directory
+sudo bash build.sh
+docker-compose up -d
+# Application is now running on port 5000
+```
+
+``` bash
+# To run on your local machine
+# cd into the server directory
+pip install -r /html-against-humanity/requirements.txt
+python3 /html-against-humanity/webserver.py
 ```
 
 * TODO
