@@ -353,5 +353,5 @@ def get_user_game_input(game_id):
 if __name__ == '__main__':
     startup()
     app.config['TEMPLATES_AUTO_RELOAD'] = True
-    app.run(use_reloader=True, debug=False)
+    app.run(use_reloader=True, debug=False, host= '0.0.0.0')
     # https://stackoverflow.com/questions/60539952/is-it-possible-to-change-code-of-flask-without-rerunning-the-flask-server-after
