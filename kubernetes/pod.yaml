@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: html-against-humanity
+  labels:
+    app: html-against-humanity
+spec:
+  containers:
+  - name: html-against-humanity
+    image: dentropy/html-against-humanity
+    ports:
+      - containerPort: 5000
