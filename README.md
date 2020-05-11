@@ -17,6 +17,20 @@ pip install -r /html-against-humanity/requirements.txt
 python3 /html-against-humanity/webserver.py
 ```
 
+``` bash
+# To run using kubernetes
+# cd into this directory
+kubectl apply -f kubernetes/pod.yaml
+kubectl apply -f kubernetes/service.yaml
+kubectl create -f kubernetes/ingress.yaml
+
+# Take Down
+kubectl delete pod html-against-humanity
+kubectl delete service html-against-humanity
+kubectl delete ingress html-against-humanity
+
+```
+
 * TODO
   * [✓] Write HTML for homepage
   * [✓] Implement session cookies
