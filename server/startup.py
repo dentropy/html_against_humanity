@@ -13,7 +13,7 @@ def import_cards():
             cards = json.load(f)
     else:
         print("Fetching cards from interwebs")
-        cards_url = "https://raw.githubusercontent.com/crhallberg/json-against-humanity/master/dev/cah.json"
+        cards_url = "https://raw.githubusercontent.com/crhallberg/json-against-humanity/v1/dev/cah.json"
         cards_url_response = urllib.request.urlopen(cards_url)
         cards = json.loads(cards_url_response.read())
     number_of_cards = session.query(WhiteCards.white_cards).count()
